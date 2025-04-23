@@ -5,25 +5,10 @@ import requests
 
 st.set_page_config(page_title="Sōma.ai - Chat", layout="centered")
 
-# ---------------- Sentiment Detection via Hugging Face API ----------------
-def get_sentiment(text):
-    headers = {"Authorization": f"Bearer {st.secrets['HF_API_KEY']}"}
-    payload = {"inputs": text}
-    response = requests.post(
-        "https://api-inference.huggingface.co/models/distilbert-base-uncased-finetuned-sst-2-english",
-        headers=headers,
-        json=payload
-    )
-    try:
-        result = response.json()
-        return result[0][0]["label"].lower()
-    except Exception:
-        return "neutral"
-
 # ---------------- Weather Context ----------------
 def get_weather_summary():
     try:
-        lat, lon = 40.7128, -74.0060
+        lat, lon = 40.7128, -74.0060  # NYC fallback
         url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true"
         response = requests.get(url).json()
         temp = response["current_weather"]["temperature"]
@@ -110,12 +95,9 @@ user_input = st.chat_input("Ask your question...")
 if user_input:
     with st.spinner("Thinking..."):
         try:
-            sentiment = get_sentiment(user_input)
             weather_context = get_weather_summary()
-
             tone_instruction = (
-                f"{weather_context} The user seems to have a {sentiment} mood. "
-                f"Please reflect that in your response."
+                f"{weather_context} Please consider this environmental context while responding."
             )
 
             st.session_state.chat.send_message(tone_instruction)
