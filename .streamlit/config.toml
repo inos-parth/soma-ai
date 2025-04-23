@@ -1,0 +1,10 @@
+[theme]
+base = "dark"
+primaryColor = "#91A6FF"         # soft indigo blue
+backgroundColor = "#1e1e2f"      # deep navy blue
+secondaryBackgroundColor = "#2d2d44"  # slightly lighter for boxes/cards
+textColor = "#eaeef2"            # light grey-white for soft readability
+font = "sans serif"
+
+[client]
+showSidebarNavigation = false
